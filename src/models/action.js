@@ -35,16 +35,28 @@ export function executeAction(action) {
 function run(relation, action) {
     switch(action.type) {
         case ACTION_TYPES.CONSTRUCTIVE:
-            relation.knowledge += 1 * action.ratio;
-            relation.attitude += 1 * action.ratio;
+            relation.knowledge += computeKnowledge(1, relation.source);
+            relation.attitude += computeAttitude(1, relation.source);
         break;
         case ACTION_TYPES.DESTRUCTIVE:
-            relation.knowledge += 1 * action.ratio;
-            relation.attitude -= 1 * action.ratio;
+            relation.knowledge += computeKnowledge(1, relation.source);
+            relation.attitude += computeAttitude(-1, relation.source);
         break;
         case ACTION_TYPES.NEUTRAL:
-
+            relation.knowledge += computeKnowledge(1, relation.source);
         break;
         default:
     } 
+}
+
+function computeKnowledge(number, character) {
+    return number * (0.05 * character.stats.memory);
+}
+
+function computeAttitude(number, character) {
+    if (number < 0) {
+        return number * (0.05 * character.stats.anger);
+    }
+
+    return number * (0.05 * character.stats.forgiveness);
 }
